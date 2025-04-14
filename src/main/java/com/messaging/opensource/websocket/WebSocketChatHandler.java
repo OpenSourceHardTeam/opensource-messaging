@@ -5,6 +5,7 @@ import com.messaging.opensource.message.entity.MessageDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -37,7 +38,7 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
     }
 
     @Override
-    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+    public void afterConnectionEstablished(@NonNull WebSocketSession session) throws Exception {
         super.afterConnectionEstablished(session);
         UserInfo userInfo = extractUserInfo(session);
 
@@ -57,7 +58,9 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
     }
 
     @Override
-    protected void handleTextMessage(WebSocketSession session, TextMessage textMessage) throws Exception {
+    protected void handleTextMessage(
+            @NonNull WebSocketSession session,
+            @NonNull TextMessage textMessage) throws Exception {
         super.handleTextMessage(session, textMessage);
         UserInfo userInfo = extractUserInfo(session);
 
@@ -107,13 +110,17 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
     }
 
     @Override
-    public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
+    public void handleTransportError(
+            @NonNull WebSocketSession session,
+            @NonNull Throwable exception) throws Exception {
         logger.error("WebSocket transport error: {}", exception.getMessage(), exception);
         super.handleTransportError(session, exception);
     }
 
     @Override
-    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+    public void afterConnectionClosed(
+            @NonNull WebSocketSession session,
+            @NonNull CloseStatus status) throws Exception {
         UserInfo userInfo = extractUserInfo(session);
 
         if (userInfo != null) {
