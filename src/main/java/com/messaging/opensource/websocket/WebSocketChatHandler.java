@@ -1,7 +1,11 @@
 package com.messaging.opensource.websocket;
 
+import com.messaging.opensource.message.MessageService;
+import com.messaging.opensource.message.entity.MessageDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -9,14 +13,24 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class WebSocketHandler extends TextWebSocketHandler {
+@Component
+public class WebSocketChatHandler extends TextWebSocketHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(WebSocketHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(WebSocketChatHandler.class);
+
+    private final MessageService messageService;
+
+    @Autowired
+    public WebSocketChatHandler(MessageService messageService) {
+        this.messageService = messageService;
+    }
 
     // sessionMap Key - UserInfo chatRoomId
     private final Map<Long, Set<UserInfo>> sessionMap = new ConcurrentHashMap<>();
@@ -35,9 +49,28 @@ public class WebSocketHandler extends TextWebSocketHandler {
         super.handleTextMessage(session, textMessage);
         UserInfo userInfo = extractUserInfo(session);
 
+        // send to chatroom
         String textMessagePayload = textMessage.getPayload();
         String message = userInfo.getName() + " : " + textMessagePayload;
         sendMessageToChatRoomExceptSelf(userInfo.getChatRoomId(), message, userInfo);
+
+        // save message data, 비동기적으로 메시지 저장
+        MessageDocument messageDocument = MessageDocument.builder()
+                .senderId(userInfo.getUserId())
+                .chatroomId(userInfo.getChatRoomId())
+                .content(textMessagePayload)
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        CompletableFuture.runAsync(() -> {
+            try {
+                messageService.saveMessage(messageDocument);
+            } catch (Exception e) {
+                // 로깅만 하고 WebSocket 통신에는 영향을 주지 않음
+                logger.error("Failed to save message: {}", e.getMessage(), e);
+            }
+        });
+
     }
 
     @Override

@@ -31,8 +31,8 @@ public class MessageService {
 
     // 메시지 저장
     @Transactional
-    public MessageDocumentDto saveMessage(MessageDocument message) {
-        return messageRepository.save(message).toDto();
+    public String saveMessage(MessageDocument message) {
+        return messageRepository.save(message).getId();
     }
 
     // 특정 시간 이후의 메시지 조회
