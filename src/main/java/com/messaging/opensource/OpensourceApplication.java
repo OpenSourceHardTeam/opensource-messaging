@@ -7,7 +7,6 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 
 @SpringBootApplication
 @EnableMongoRepositories
-@EnableWebSocketMessageBroker
 public class OpensourceApplication {
 
 	public static void main(String[] args) {

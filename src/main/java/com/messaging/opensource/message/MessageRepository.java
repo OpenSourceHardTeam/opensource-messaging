@@ -1,5 +1,6 @@
 package com.messaging.opensource.message;
 
+import com.messaging.opensource.message.entity.MessageDocument;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
@@ -19,6 +20,9 @@ public interface MessageRepository extends MongoRepository<MessageDocument, Stri
 
     // 특정 시간 이전의 메시지 조회 (페이징에 유용)
     List<MessageDocument> findByChatroomIdAndTimestampBeforeOrderByTimestampDesc(Long chatroomId, LocalDateTime timestamp);
+
+    // 특정 사용자가 특정 채팅방에 작성한 메시지 조회
+    List<MessageDocument> findBySenderIdAndChatroomId(Long senderId, Long chatroomId);
 
     // 특정 채팅방의 메시지 개수 조회
     long countByChatroomId(Long chatroomId);
