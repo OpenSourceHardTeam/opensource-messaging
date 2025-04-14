@@ -66,11 +66,9 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
             try {
                 messageService.saveMessage(messageDocument);
             } catch (Exception e) {
-                // 로깅만 하고 WebSocket 통신에는 영향을 주지 않음
                 logger.error("Failed to save message: {}", e.getMessage(), e);
             }
         });
-
     }
 
     @Override
