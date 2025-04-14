@@ -1,9 +1,9 @@
-package com.messaging.opensource.message;
+package com.messaging.opensource.message.entity;
 
+import com.messaging.opensource.message.dto.MessageDocumentDto;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
-import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -27,4 +27,14 @@ public class MessageDocument {
 
     @CreatedDate
     private LocalDateTime timestamp;
+
+    public MessageDocumentDto toDto() {
+        return MessageDocumentDto.builder()
+                .id(this.getId())
+                .content(this.getContent())
+                .chatroomId(this.getChatroomId())
+                .senderId(this.getSenderId())
+                .timestamp(this.getTimestamp())
+                .build();
+    }
 }
