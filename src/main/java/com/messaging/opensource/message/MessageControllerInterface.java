@@ -1,5 +1,7 @@
 package com.messaging.opensource.message;
 
+import com.messaging.opensource.message.dto.CountMessagesByChatroomDto;
+import com.messaging.opensource.message.dto.MessageDocumentDto;
 import com.messaging.opensource.message.entity.MessageDocument;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +20,7 @@ public interface MessageControllerInterface {
      * @return 채팅방의 메시지 목록
      */
     @GetMapping("/chatroom/{chatroomId}")
-    ResponseEntity<List<MessageDocument>> getMessagesByChatroom(@PathVariable Long chatroomId);
+    ResponseEntity<List<MessageDocumentDto>> getMessagesByChatroom(@PathVariable Long chatroomId);
 
     /**
      * 특정 채팅방의 최신순으로 메시지 조회
@@ -26,7 +28,7 @@ public interface MessageControllerInterface {
      * @return 채팅방의 최신순 메시지 목록
      */
     @GetMapping("/chatroom/{chatroomId}/recent")
-    ResponseEntity<List<MessageDocument>> getRecentMessagesByChatroom(@PathVariable Long chatroomId);
+    ResponseEntity<List<MessageDocumentDto>> getRecentMessagesByChatroom(@PathVariable Long chatroomId);
 
     /**
      * 특정 시간 이후의 메시지 조회
@@ -35,7 +37,7 @@ public interface MessageControllerInterface {
      * @return 해당 시간 이후의 메시지 목록
      */
     @GetMapping("/chatroom/{chatroomId}/after")
-    ResponseEntity<List<MessageDocument>> getMessagesAfterTimestamp(
+    ResponseEntity<List<MessageDocumentDto>> getMessagesAfterTimestamp(
             @PathVariable Long chatroomId,
             @RequestParam LocalDateTime timestamp);
 
@@ -46,7 +48,7 @@ public interface MessageControllerInterface {
      * @return 해당 시간 이전의 메시지 목록
      */
     @GetMapping("/chatroom/{chatroomId}/before")
-    ResponseEntity<List<MessageDocument>> getMessagesBeforeTimestamp(
+    ResponseEntity<List<MessageDocumentDto>> getMessagesBeforeTimestamp(
             @PathVariable Long chatroomId,
             @RequestParam LocalDateTime timestamp);
 
@@ -56,7 +58,7 @@ public interface MessageControllerInterface {
      * @return 채팅방의 메시지 개수 정보
      */
     @GetMapping("/chatroom/{chatroomId}/count")
-    ResponseEntity<MessageDocument> countMessagesByChatroom(@PathVariable Long chatroomId);
+    ResponseEntity<CountMessagesByChatroomDto> countMessagesByChatroom(@PathVariable Long chatroomId);
 
     /**
      * 특정 사용자가 보낸 모든 메시지 조회
@@ -64,7 +66,7 @@ public interface MessageControllerInterface {
      * @return 해당 사용자가 보낸 메시지 목록
      */
     @GetMapping("/sender/{senderId}")
-    ResponseEntity<List<MessageDocument>> getMessagesBySender(@PathVariable Long senderId);
+    ResponseEntity<List<MessageDocumentDto>> getMessagesBySender(@PathVariable Long senderId);
 
     /**
      * 특정 사용자가 특정 채팅방에 보낸 모든 메시지 조회
@@ -73,7 +75,7 @@ public interface MessageControllerInterface {
      * @return 해당 사용자가 특정 채팅방에 보낸 메시지 목록
      */
     @GetMapping("/chatroom/{chatroomId}/sender/{senderId}")
-    ResponseEntity<List<MessageDocument>> getMessagesBySenderInChatroom(
+    ResponseEntity<List<MessageDocumentDto>> getMessagesBySenderInChatroom(
             @PathVariable Long senderId,
             @PathVariable Long chatroomId);
 
@@ -84,7 +86,7 @@ public interface MessageControllerInterface {
      * @return 검색 결과 메시지 목록
      */
     @GetMapping("/chatroom/{chatroomId}/search")
-    ResponseEntity<List<MessageDocument>> searchMessages(
+    ResponseEntity<List<MessageDocumentDto>> searchMessages(
             @PathVariable Long chatroomId,
             @RequestParam String keyword);
 
@@ -94,7 +96,7 @@ public interface MessageControllerInterface {
      * @return 채팅방의 최신 메시지
      */
     @GetMapping("/chatroom/{chatroomId}/latest")
-    ResponseEntity<MessageDocument> getLatestMessageByChatroom(@PathVariable Long chatroomId);
+    ResponseEntity<MessageDocumentDto> getLatestMessageByChatroom(@PathVariable Long chatroomId);
 
     /**
      * 특정 사용자의 특정 채팅방 메시지 삭제
