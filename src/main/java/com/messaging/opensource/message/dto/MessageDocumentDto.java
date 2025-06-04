@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Getter
 public class MessageDocumentDto {
 
-    String id;
+    Long id;  // String에서 Long으로 변경
 
     Long chatroomId;
 

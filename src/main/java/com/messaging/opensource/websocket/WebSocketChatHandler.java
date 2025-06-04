@@ -1,7 +1,7 @@
 package com.messaging.opensource.websocket;
 
 import com.messaging.opensource.message.MessageService;
-import com.messaging.opensource.message.entity.MessageDocument;
+import com.messaging.opensource.message.entity.MessageEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,19 +89,19 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
     }
 
     private void saveMessageAsync(UserInfo userInfo, String messageContent) {
-        MessageDocument messageDocument = createMessageDocument(userInfo, messageContent);
+        MessageEntity messageEntity = createMessageDocument(userInfo, messageContent);
 
         CompletableFuture.runAsync(() -> {
             try {
-                messageService.saveMessage(messageDocument);
+                messageService.saveMessage(messageEntity);
             } catch (Exception e) {
                 logger.error("Failed to save message: {}", e.getMessage(), e);
             }
         });
     }
 
-    private MessageDocument createMessageDocument(UserInfo userInfo, String content) {
-        return MessageDocument.builder()
+    private MessageEntity createMessageDocument(UserInfo userInfo, String content) {
+        return MessageEntity.builder()
                 .senderId(userInfo.getUserId())
                 .chatroomId(userInfo.getChatRoomId())
                 .content(content)
